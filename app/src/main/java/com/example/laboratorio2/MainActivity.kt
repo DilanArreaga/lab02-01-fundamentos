@@ -38,8 +38,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// ⚙️ Cambia a 6 si quieres 1d6 por stat. Con 20 se respeta tu regla <30 / ≥50.
+// ⚙️ D20 por stat para que las reglas <30 / ≥50 tengan sentido.
+// Cambia a 6 si quisieras 1d6 por stat.
 private const val SIDES = 20
+
+// 🎨 Color lawngreen
+private val LawnGreen = Color(0xFF7CFC00)
+private val LawnGreenText = Color.Black
 
 @Composable
 fun CharacterSheet() {
@@ -65,7 +70,7 @@ fun CharacterSheet() {
     val (mensaje, colorMensaje) = when {
         total < 30 -> "¡Se recomienda volver a tirar!" to Color(0xFFFF5252) // rojo
         total >= 50 -> "¡Divino!" to Color(0xFFFFD700)                  // dorado
-        else -> "Aceptable" to Color(0xFFFFD54F)                            // ámbar
+        else -> "Aceptable" to Color(0xFF7CFC00)                            // ámbar
     }
 
     Column(
@@ -76,7 +81,7 @@ fun CharacterSheet() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "ESTADISTICAS DEL PERSONAJE)",
+            text = "Estadisticas del Personaje",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -88,13 +93,27 @@ fun CharacterSheet() {
         ) {
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = { rollAll() }
-            ) { Text("Tirar todo") }
+                onClick = { rollAll() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LawnGreen,
+                    contentColor = LawnGreenText
+                )
+            ) {
+                Text("Tirar todo")
+            }
 
+            // Si prefieres que este se vea "outlined" clásico, deja OutlinedButton sin containerColor.
             OutlinedButton(
                 modifier = Modifier.weight(1f),
-                onClick = { str = 0; dex = 0; intell = 0 }
-            ) { Text("Reiniciar") }
+                onClick = { str = 0; dex = 0; intell = 0 },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = LawnGreen,    // lo convertimos en "filled" verde
+                    contentColor = LawnGreenText
+                ),
+                border = ButtonDefaults.outlinedButtonBorder()
+            ) {
+                Text("Reiniciar")
+            }
         }
 
         // Tres filas de stats con Card + Row
@@ -138,7 +157,7 @@ fun CharacterSheet() {
  * Fila de stat con Card + Row:
  * - Etiqueta (STR/DEX/INT)
  * - Valor grande en un contenedor
- * - Botón "Tirar" individual
+ * - Botón "Tirar" individual (lawngreen)
  */
 @Composable
 fun StatRowCard(
@@ -187,8 +206,16 @@ fun StatRowCard(
                 )
             }
 
-            // Botón de tirada individual
-            Button(onClick = onRoll) { Text("Tirar") }
+
+            Button(
+                onClick = onRoll,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LawnGreen,
+                    contentColor = LawnGreenText
+                )
+            ) {
+                Text("Tirar")
+            }
         }
     }
 }
